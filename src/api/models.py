@@ -10,7 +10,7 @@ class User(db.Model):
     lastName = db.Column(db.String(20), nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     isActive = db.Column(db.Boolean(), unique=False, nullable=False)
-    userType= db.Column(db.String(10), nullable=False)
+    userType= db.Column(db.String(10), nullable=False, default='cliente') #Posible error.
 
     def __repr__(self):
         return f'<User {self.email}>'
@@ -19,11 +19,11 @@ class User(db.Model):
         return {
             "id": self.id,
             "email": self.email,
-            "nombre": self.nombre,
-            "apellido": self.apellido,
+            "firstName": self.firstName, #Posible error
+            "lastName": self.lastName, #Posible error
             "password":self.password,
             "isActive":self.isActive,
-            "userType": self.userType
+            "userType": self.userType #Error comas
             # do not serialize the password, its a security breach
         }
     
@@ -43,13 +43,13 @@ class Stock(db.Model):
             "description": self.description,
             "quantity": self.quantity,
             "type": self.type,
-            "image": self.image,
+            "image": self.image 
         }
     
 class Form(db.Model):
     __tablename__='form'
     id = db.Column(db.Integer, primary_key=True)
-    initialDate = db.Column(db.Date, nullable=False)
+    initialDate = db.Column(db.Date, nullable=False) #Falta type.
     finalDate = db.Column(db.Date, nullable=False)
     userId = db.Column(db.Integer, db.ForeignKey('user.id'),nullable=False)
     user_relationship =db.relationship("User")
@@ -62,8 +62,8 @@ class Form(db.Model):
             "id": self.id,
             "initialDate": self.initialDate,
             "finalDate": self.finalDate,
-            "type": self.type,
-            "userId": User.id,
+            "type": self.type, #Posible error
+            "userId": self.userId #Posible error
         }
     
 class DetailForm(db.Model):
@@ -85,8 +85,8 @@ class DetailForm(db.Model):
         return {
             "id": self.id,
             "formId": self.formId,
-            "stockId": self.stockId,
+            "stockId": self.stockId, #Posible error
             "description": self.description,
             "quantity": self.quantity,
-            "type": self.type,
+            "type": self.type
         }
