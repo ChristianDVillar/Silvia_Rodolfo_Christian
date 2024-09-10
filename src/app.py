@@ -85,7 +85,7 @@ def serve_any_other_file(path):
 def register():
     body = request.get_json(silent=True)
     
-    if body is None:
+    if not body:
         return jsonify({'msg': 'Fields cannot be left empty'}), 400
     
     first_name = body.get('firstName')
@@ -125,7 +125,7 @@ def register():
 def login():
     body = request.get_json(silent=True)
     
-    if body is None:
+    if not body:
         return jsonify({'msg': 'Fields cannot be left empty'}), 400
     
     email = body.get('email')#.get() para acceder a una clave en un diccionario que no existe, devolverá None en lugar de lanzar una excepción.
@@ -137,7 +137,7 @@ def login():
         return jsonify({'msg': 'The password field cannot be empty'}), 400
 
     user = User.query.filter_by(email=email).first() #Buscamos al usuario mediante su email:
-    if user is None:
+    if not user:
         return jsonify({'msg': 'User or password invalids'}), 400
 
     password_db = user.password #Recuperamos el hash de la contraseña del usuario desde la base de datos. Este hash es el que se generó cuando el usuario creó su cuenta.
@@ -149,6 +149,16 @@ def login():
     access_token = create_access_token(identity=user.email, expires_delta=expires)#Creamos el token y usamos el email como identidad.
     return jsonify({'msg': 'ok', 'jwt_token': access_token}), 200
 
+@app.route('/restore_password', methods=['POST'])
+def restore_password():
+    body = request.get_json(silent=True)
+    if body is None:
+        return jsonify ({'msg': 'Fields cannot be left empty'}), 400
+    email = body.get('email') 
+    if not email:
+        return jsonify ({'msg': 'User or password invalids'}), 400
+    email_user = User.query.filter_by(body=email['email'])
+    if not email_user: 
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
