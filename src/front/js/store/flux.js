@@ -51,6 +51,36 @@ const getState = ({ getStore, getActions, setStore }) => {
 			deleteItem: (name) => {
 				const store = getStore();
 				setStore({ cart: store.cart.filter(item => item[0] !== name) });
+			},
+			goStock: async () => {
+				//recupera el token
+				const token = localStorage.getItem("jwt-token");
+				if (!token) {
+					console.log("Token no encontrado");
+					//si no exixte el token devuelve false
+					return false;
+				}
+				try {
+					const response = await fetch(`${apiUrl}/stock`, {
+						method: "GET",
+						headers: {
+							"Content-Type": "application/json",
+							//la API requiere esta sintaxis
+							"Authorization": "Bearer " + token
+						},
+					});
+
+					if (!response.ok) {
+						throw Error("Hubo un problema en la solicitud");
+					}
+					const data = await response.json();
+					console.log("Tienes acceso", data);
+					//devuelve "true" si tiene acceso
+					return true;
+					//si en algún punto del código de try falla, salta catch
+				} catch (err) {
+					console.log(err);
+				}
 			}
 		}
 	};

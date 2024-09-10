@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logoNavbar from "../../img/logo.png";
 import { Context } from "../store/appContext";
@@ -10,6 +10,14 @@ export const Navbar = () => {
 	//"false" para que inicie como NO logueado
 	const [isLogged, setIsLogged] = useState(false);
 	const count = store.cart.length;
+
+		//comprueba si hay token
+		useEffect(() => {
+			const token = localStorage.getItem("jwt-token");
+			if (token) {
+				setIsLogged(true);
+			}
+		}, []);
 
 	//si está logueado cambia el estado y elimina el token, si no lo está envía a inicio para que lo haga
 	const handleLogin = () => {
@@ -37,6 +45,8 @@ export const Navbar = () => {
 						{/*cambia el texto del botón según el estado*/}
 						{isLogged ? "Logout" : "Login"}
 					</button>
+
+					{isLogged && (
 					<div className="btn-group top-50 end-0 me-5" style={{ zIndex: "1" }}>
 						<button type="button" className="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style={{ backgroundColor: "#4F9CF9" }}>
 							Order
@@ -63,6 +73,7 @@ export const Navbar = () => {
 							}
 						</ul>
 					</div>
+					)}
 				</div>
 			</div>
 		</nav>

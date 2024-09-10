@@ -46,7 +46,7 @@ class Stock(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(30), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
-    type=db.Column(Enum(StockTypeEnum), nullable=False)
+    stocktype=db.Column(Enum(StockTypeEnum), nullable=False)
     image= db.Column(db.String(250), nullable=False)
     def __repr__(self):
         return f'<Stock {self.id}>'
@@ -63,13 +63,12 @@ class Stock(db.Model):
 class Form(db.Model):
     __tablename__='form'
     id = db.Column(db.Integer, primary_key=True)
-    initialDate = db.Column(db.Date, nullable=False)
-    finalDate = db.Column(db.Date, nullable=False)
+    date=db.Column(db.Date, nullable=False)
     userId = db.Column(db.Integer, db.ForeignKey('user.id'),nullable=False)
     user_relationship =db.relationship("User")
     
     def __repr__(self):
-        return f'<form {self.id}>'
+        return f'<form:{self.id},Initial Date:{self.initialDate},Final Date:{self.finalDate},User:{self.userId}>'
 
     def serialize(self):
         return {
@@ -77,6 +76,7 @@ class Form(db.Model):
             "initialDate": self.initialDate,
             "finalDate": self.finalDate,
             "userId": self.id,
+            "date":self.date
         }
     
 class DetailForm(db.Model):
@@ -87,8 +87,10 @@ class DetailForm(db.Model):
     stockId = db.Column(db.Integer, db.ForeignKey('stock.id'),nullable=False)
     stock_relationship =db.relationship("Stock")
     description = db.Column(db.String(30), nullable=False)
-    quantity = db.Column(db.String(30), nullable=False)
-    type = type=db.Column(Enum(StockTypeEnum), nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+    stocktype = db.Column(Enum(StockTypeEnum), nullable=False)
+    initialDate = db.Column(db.Date, nullable=False)
+    finalDate = db.Column(db.Date, nullable=False)
     
     
     def __repr__(self):
@@ -101,5 +103,7 @@ class DetailForm(db.Model):
             "stockId": self.stockId,
             "description": self.description,
             "quantity": self.quantity,
-            "type": self.stockType.value,  # Convertir el Enum a su valor (cadena)
+            "initialDate": self.initialDate,
+            "finalDate": self.finalDate,
+            "stocktype": self.stockType.value,  # Convertir el Enum a su valor (cadena)
         }
