@@ -84,7 +84,7 @@ def serve_any_other_file(path):
 @app.route('/allforms', methods=['GET'])
 def get_forms():
     try:
-        all_forms = Form.query.allgit()  # Obtiene todos los registros de la tabla Form
+        all_forms = Form.query.all()  # Obtiene todos los registros de la tabla Form
         # Aplica el método to_dict() a cada objeto Form en la lista
         all_forms_serialize=[]
         for form in all_forms:
@@ -250,17 +250,6 @@ def login():
     expires = timedelta(hours=1) #Tiempo de expiración del token.
     access_token = create_access_token(identity=user.email, expires_delta=expires)#Creamos el token y usamos el email como identidad.
     return jsonify({'msg': 'ok', 'jwt_token': access_token}), 200
-
-@app.route('/restore_password', methods=['POST'])
-def restore_password():
-    body = request.get_json(silent=True)
-    if body is None:
-        return jsonify ({'msg': 'Fields cannot be left empty'}), 400
-    email = body.get('email') 
-    if not email:
-        return jsonify ({'msg': 'User or password invalids'}), 400
-    email_user = User.query.filter_by(body=email['email'])
-    if not email_user: 
 
 
 # this only runs if `$ python src/main.py` is executed
