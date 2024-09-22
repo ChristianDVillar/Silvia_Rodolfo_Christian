@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import linea from "../../img/linea.png"
 import { useNavigate } from "react-router-dom";
@@ -21,6 +21,7 @@ const Stock = () => {
         };
         fetchUserType();
         console.log(usertype);
+        actions.getStock();
     }, []);
 
     //dependiendo del usertype el botón va a una página o a otra
@@ -34,22 +35,22 @@ const Stock = () => {
 
     return (
         <div className="container">
-            <div className="d-flex vh-100 mt-5 row">
+            <div className="d-flex flex-column align-items-start mt-5 row" style={{minHeight: "200px"}}>
                 <div>
                     <h1 className="mb-n1 px-5" style={{ position: "relative", zIndex: 1, fontWeight: "bold" }}>Stock</h1>
-                    <img src={linea} style={{ zIndex: 0 }} alt="Linea decorativa" />
+                    <img src={linea} className="img-fluid" style={{ zIndex: 0, maxWidth: "100%", height: "auto" }} alt="Linea decorativa" />
                 </div>
                 <div className="mt-5">
                     <button onClick={goTo} type="button" className="btn btn-primary fw-light" style={{ backgroundColor: "#4F9CF9", border: "none" }}>
                     {usertype === "usuario" ? "Order" : "New article"}
                     </button>
                 </div>
-                <div className="container mt-3">
-                    <div className="row">
+                <div className="container mt-5">
+                    <div className="row g-3">
                         {store.article && store.article.length > 0 ? (
                             store.article.map((article, index) => {
                                 return (
-                                    <div key={index} className="col-3 me-2">
+                                    <div key={index} className="col-12 col-sm-6 col-md-4 col-lg-3">
                                         <Article
                                             description={article.description}
                                             stocktype={article.stocktype}
@@ -66,7 +67,6 @@ const Stock = () => {
                         )}
                     </div>
                 </div>
-
             </div>
         </div>
     )

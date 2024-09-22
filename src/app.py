@@ -19,7 +19,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_jwt_extended import JWTManager
 from datetime import timedelta #Importamos "timedelta" de datetime para modificar el tiempo de expiración de nuestro token.
 from flask_bcrypt import Bcrypt
-from datetime import datetime
+
 # from models import Person
 
 
@@ -47,7 +47,7 @@ CORS(app)
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT-KEY") #Método para traer variables.
 jwt = JWTManager(app)
 bcrypt = Bcrypt(app)
-frontend_url = "https://fuzzy-succotash-74vg5jqrqw5h6x7-3000.app.github.dev"
+frontend_url = os.getenv("FRONTEND_URL")
 
 # database condiguration
 db_url = os.getenv("DATABASE_URL")
@@ -88,7 +88,6 @@ def sitemap():
 
 # any other endpoint will try to serve it like a static file
 
-
 @app.route('/<path:path>', methods=['GET'])
 def serve_any_other_file(path):
     if not os.path.isfile(os.path.join(static_file_dir, path)):
@@ -113,7 +112,6 @@ def get_forms():
         return jsonify(response_body), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
 
 @app.route('/register', methods=['POST'])
 def register():
@@ -199,29 +197,22 @@ def forgot_password():
         email = data.get('email')
         print(os.getenv("MAIL_USERNAME"))
         print(email)
-        
         # Validar que el correo esté presente
         if not email:
             return jsonify({"msg": "Email is required"}), 400
-
         # Verificar si el correo está registrado en la base de datos
         user = User.query.filter_by(email=email).first()
-
         # Mensaje genérico, sin importar si el usuario fue encontrado o no
         if not user:
             return jsonify({"msg": "If the email is registered, a reset link has been sent."}), 200
-
         # Generar un UUID
         reset_uuid = str(uuid.uuid4())
-
         # Guardar el UUID en la base de datos
         new_uuid_entry = UserUUID(userId=user.id, uuid=reset_uuid)
         db.session.add(new_uuid_entry)
         db.session.commit()
-
         # Generar el enlace de restablecimiento de contraseña
         reset_link = f"{frontend_url}/reset-password/{reset_uuid}"
-
         # Enviar correo con el UUID
         msg = Message(
             subject="(No Reply), Mail para cambio contraseña",
@@ -243,56 +234,84 @@ def forgot_password():
             <p>If you didn't request a password reset, you can ignore this email.</p>
         """
         mail.send(msg)
-
         # Mensaje genérico para evitar enumeración de correos
         return jsonify({"msg": "If the email is registered, a reset link has been sent."}), 200
-
     except Exception as e:
         print(e)
         return jsonify({"error": "An error occurred. Please try again later."}), 500
-
 
 @app.route('/reset-password/<uuid>', methods=['PUT'])
 def reset_password(uuid):
     try:
         data = request.get_json()
         new_password = data.get('newPassword')
-
         # Verificar que se haya proporcionado la nueva contraseña
         if not new_password:
             return jsonify({"msg": "New password is required"}), 400
-
         # Buscar el UUID en la tabla UserUUID
         uuid_entry = UserUUID.query.filter_by(uuid=uuid).first()
-
         # Verificar si el UUID existe y no ha expirado
         if not uuid_entry or uuid_entry.is_expired():
             return jsonify({"msg": "Invalid or expired reset link"}), 400
-
         # Buscar al usuario asociado con este UUID
         user = User.query.get(uuid_entry.userId)
-
         if not user:
             return jsonify({"msg": "User not found"}), 404
-
         # Hashear la nueva contraseña con Flask-Bcrypt
         hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
-
         # Almacenar la nueva contraseña hasheada en la base de datos
         user.password = hashed_password
         db.session.commit()
-
         # Opcional: Borrar o invalidar el UUID tras el uso
         db.session.delete(uuid_entry)
         db.session.commit()
-
         return jsonify({"msg": "Password updated"}), 200
-
     except Exception as e:
         # Mantén solo los mensajes de error para no mostrar información sensible
         print(f"Error during password reset: {str(e)}")
         return jsonify({"error": "An internal error occurred. Please try again later."}), 500
 
+@app.route('/change-password', methods=['POST'])
+@jwt_required()  # Verifica que el usuario está autenticado con JWT
+def change_password():
+    try:
+        data = request.get_json()
+        current_password = data.get('currentPassword')
+        new_password = data.get('newPassword')
+        confirm_password = data.get('confirmPassword')
+
+        # Validar que todos los campos están presentes
+        if not current_password or not new_password or not confirm_password:
+            return jsonify({"msg": "All fields are required"}), 400
+
+        # Obtener la identidad del usuario actual desde el token JWT
+        current_user_email = get_jwt_identity()
+
+        # Buscar al usuario en la base de datos
+        current_user = User.query.filter_by(email=current_user_email).first()
+        if not current_user:
+            return jsonify({"msg": "User not found"}), 404
+
+        # Verificar si la contraseña actual es correcta
+        if not bcrypt.check_password_hash(current_user.password, current_password):
+            return jsonify({"msg": "Incorrect current password"}), 400
+
+        # Verificar que la nueva contraseña coincida con la confirmación
+        if new_password != confirm_password:
+            return jsonify({"msg": "New passwords do not match"}), 400
+
+        # Hashear la nueva contraseña usando Flask-Bcrypt
+        hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+
+        # Actualizar la contraseña en la base de datos
+        current_user.password = hashed_password
+        db.session.commit()
+
+        return jsonify({"msg": "Password changed successfully!"}), 200
+
+    except Exception as e:
+        print(f"Error during password change: {str(e)}")
+        return jsonify({"error": "An internal error occurred. Please try again later."}), 500
 
 def send_reset_email(email, reset_link):
     try:
@@ -343,7 +362,6 @@ def create_form():
              "details": [detail.serialize() for detail in new_form.form_relationship]  # Devolver los detalles del form
          }), 201
 
-
 @app.route('/stock', methods=['GET'])
 @jwt_required()
 def get_stock():
@@ -364,6 +382,9 @@ def get_stock():
         if stock_type:
             query = query.filter_by(type=StockTypeEnum(stock_type))
 
+        #para que al modificar siga ordenando por id y no se ponga al final
+        query = query.order_by(Stock.id)
+
         # Ejecutar la consulta
         stock_items = query.all()
 
@@ -383,12 +404,77 @@ def get_stock():
 def create_stock():
    
     body = request.get_json(silent=True)
+
+    #accede a los datos del formulario
+    description=body['description']
+    stocktype=body['stocktype']
+    quantity=body['quantity']
+    image=body['image']
+
+     #valida campos requeridos
+    if 'description' not in body:
+        return jsonify({'msg': 'El campo description es requerido'}), 400
+    if 'stocktype' not in body:
+        return jsonify({'msg': 'El campo stocktype es requerido'}), 400
+    if 'quantity' not in body:
+        return jsonify({'msg': 'El campo quantity es requerido'}), 400
+    if 'image' not in body:
+        return jsonify({'msg': 'El campo imagen es requerido'}), 400
     
-    description = body.get('description')
-    quantity = body.get('quantity')
-    stock_type = body.get('type')
-    image = body.get('image')
+        #verifica si el artículo ya existe
+
+    if Stock.query.filter_by(description=description).first() is not None:
+        return jsonify({'msg': 'El artículo ya está en stock'}), 400
+
+    #crea el nuevo artículo
+    new_article = Stock(
+        description=description,
+        stocktype=stocktype,
+        quantity=quantity,
+        image=image  #guarda la ruta de la imagen en la BD
+    )
+
+    #guarda en la BD
+    db.session.add(new_article)
+    db.session.commit()
+    #return jsonify(new_article.serialize()), 201
+    return jsonify({'msg': 'Artículo creado con éxito'}), 200
     
+@app.route('/stock/<int:id>', methods=['GET'])
+def get_single_article(id):
+    single_article = Stock.query.get(id) 
+    if not single_article:
+        return jsonify({'msg': f'El articulo con id {id} no existe'}), 400
+    return jsonify({'msg': 'Este es el artículo que buscas', 
+                    'data': single_article.serialize()}), 200
+
+@app.route('/stock/<int:id>', methods=['PUT'])
+def edit_article(id):
+    body = request.get_json(silent=True)
+    if body is None:
+        return jsonify({'msg': 'El cuerpo de la solicitud debe ser un JSON válido'}), 400
+    article = Stock.query.get(id)
+    if not article:
+        return jsonify({'msg': f'El artículo con id {id} no ha sido encontrado'}), 404
+    if 'description' in body:
+        article.description = body['description']
+    if 'stocktype' in body:
+        article.stocktype = body['stocktype']
+    if 'quantity' in body:
+        article.quantity = body['quantity']
+    if 'image' in body:
+        article.image = body['image']
+    db.session.commit()
+    return jsonify({'msg': f'El artículo con id {id} ha sido modificado'}), 200
+
+@app.route('/stock/<int:id>', methods=['DELETE'])
+def delete_article(id):
+    article = Stock.query.get(id)
+    if not article:
+        return jsonify({'msg': f'El artículo con id {id} no ha sido encontrado'}),404
+    db.session.delete(article)
+    db.session.commit()
+    return jsonify({'msg': f'El artículo con id {id} ha sido eliminado'}), 200
 
 @app.route('/stock/available', methods=['GET'])
 def get_available_stock():
@@ -405,7 +491,6 @@ def get_available_stock():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400    
-
 
 @app.route('/form/<int:detail_id>', methods=['PUT'])
 @jwt_required()
@@ -442,8 +527,7 @@ def update_form(detail_id): #detail_id es el identificador único del detalle de
     detail_form.finalDate = final_date
     db.session.commit()
     return jsonify ({'msg': 'DetailForm updated successfully'}), 200
-
-    
+   
 @app.route('/search', methods=['GET'])
 @jwt_required()
 def search():
@@ -457,7 +541,6 @@ def search():
             return jsonify ({'msg': 'invalid type'}), 400
 #Buscamos todos los artículos en la tabla Stock que coinciden con el tipo especificado(ejem:"monitor").
         results = Stock.query.filter_by(stockType=type_enum).all()
-
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':

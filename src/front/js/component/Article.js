@@ -6,9 +6,7 @@ const Article = ({ description, quantity, stocktype, image, id }) => {
   const { store, actions } = useContext(Context);
   const navigate = useNavigate();
   const [isSelected, setIsSelected] = useState(false);
-  //const [hidden, setHidden] = useState();
   const usertype = store.usertype;
-  let hidden;
 
   useEffect(() => {
     setIsSelected(store.selected.some((element) => element.description === description));
@@ -17,7 +15,7 @@ const Article = ({ description, quantity, stocktype, image, id }) => {
       const token = localStorage.getItem("jwt_token");
       if (!token) {
         navigate("/");
-      } 
+      }
     };
     fetchUserType();
   }, []);
@@ -36,24 +34,30 @@ const Article = ({ description, quantity, stocktype, image, id }) => {
   };
 
   return (
-    <div className="card mb-5 p-2" style={{ width: "18rem", backgroundColor: "#FFE492" }}>
-      <img src={image} className="card-img-top" style={{ objectFit: "cover" }} />
+    <div className="card mb-5 p-2" style={{ width: "100%", height: "25rem", backgroundColor: "#FFE492" }}>
+      <div style={{ width: "100%", height: "400px", overflow: "hidden" }}>
+        <img src={image} className="card-img-top" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+      </div>
       <div className="card-body">
         <h4 className="card-title"> {description}</h4>
         <p>{stocktype}</p>
-        <p>Quantity:{quantity}</p>
+        <p>Quantity: {quantity}</p>
+
 
         {usertype === "usuario" && (
-          <div className={`btn btn-outline-secondary ${isSelected ? 'active' : ''}`} onClick={handleSelectedClick}>
-            {isSelected ? (
-              <i className="fa-solid fa-cart-shopping" />
-            ) : (
-              <i className="fa-solid fa-cart-arrow-down" />
-            )}
+          <div className="d-flex align-items-center">
+            <p className="mb-0">Añadir al pedido </p>
+            <div className={`btn ${isSelected ? 'active' : ''}`} onClick={handleSelectedClick}>
+              {isSelected ? (
+                <i className="fa-solid fa-square-check fa-2xl" style={{ color: "#042649" }} />
+              ) : (
+                <i className="fa-regular fa-square-check fa-2xl" style={{ color: "#042649" }} />
+              )}
+            </div>
           </div>
         )}
 
-        {usertype === "tecnico" && ( 
+        {usertype === "tecnico" && (
           <div className="text-center mb-2">
             <button type="button" className="btn btn-secondary m-2" style={{ backgroundColor: "#043873" }} onClick={() => navigate(`/edit-article/${id}`)}>
               <i className="fa-solid fa-pen-to-square" />

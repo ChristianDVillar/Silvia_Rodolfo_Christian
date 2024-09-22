@@ -13,7 +13,7 @@ import { Footer } from "./component/footer";
 import { FormPedido } from "./component/FormPedido";
 import ForgotPassword from "./component/forgotPassword";
 import ResetPassword from "./component/resetPassword"; // New component
-
+import ChangePassword from "./component/changepasswordlogged";
 import Register from "./component/Register";
 import Stock from "./pages/Stock";
 import NewArticle from "./pages/NewArticle";
@@ -44,6 +44,7 @@ const Layout = () => {
                         <Route element={<EditArticle />} path="/edit-article/:id" />
                         <Route element={<ForgotPassword />} path="forgot-password" />
                         <Route element={<ResetPassword />} path="/reset-password/:uuid" /> {/* Reset Password using UUID */}
+                        <Route element={<ChangePassword />} path="/changepasswordlogged" />
                         <Route element={<h1>Not found!</h1>} />
 
                     </Routes>

@@ -49,39 +49,64 @@ export const Home = () => {
 		}
 	};
 
-	return (
-		<div className="d-flex">
-			<div className="d-flex vh-100 justify-content-center align-items-center container row col-6" style={{ marginLeft: "100px" }}>
-				<div>
-					<h1 className="mb-n1 px-5" style={{ position: "relative", zIndex: 1, fontSize: "80px", fontWeight: "bold" }}>Sign in</h1>
-					<img src={linea} style={{ zIndex: 0 }} alt="Linea decorativa" />
-					<h3 className="px-5 fw-normal">Book your material</h3>
-					<h6 className="px-5 fw-light" style={{ marginTop: "80px" }}>If you do not yet have an account</h6>
-					<div className="px-5">
-						<Link to="/register" className="mb-3">
-							<button type="button" className="btn btn-primary fw-light" style={{ backgroundColor: "#4F9CF9", border: "none" }}>
-								Sign up <i className="fa-solid fa-arrow-right fa-sm" />
-							</button>
-						</Link>
-					</div>
-				</div>
-				<img src={yeti} style={{ zIndex: 0, width: "300px", bottom: "200px", left: "550px" }} className="position-absolute" />
-			</div>
+	return (		
+		 <div className="d-flex flex-column flex-md-row vh-100 align-items-center justify-content-center">
+		 {/* Sección izquierda */}
+		 <div className="text-center text-md-start col-12 col-md-6 d-flex flex-column justify-content-center align-items-md-start position-relative">
+                <h1 className="mb-1 px-md-5 display-4 font-weight-bold" style={{fontSize: "80px", fontWeight: "bold"}}>Sign in</h1>
+                <img src={linea} className="mx-md-5 my-2" alt="Linea decorativa" />
+                <h3 className="px-md-5">Book your material</h3>
+                <h6 className="px-md-5 mt-5">If you do not yet have an account</h6>
+                <div className="px-md-5 mt-3">
+                    <Link to="/register">
+                        <button type="button" className="btn btn-primary fw-light" style={{ backgroundColor: "#4F9CF9", border: "none" }}>
+                            Sign up <i className="fa-solid fa-arrow-right fa-sm" />
+                        </button>
+                    </Link>
+                </div>
 
-			<div className="container col-3 row d-flex justify-content-center align-items-center container" style={{ marginLeft: "80px" }}>
-				<form onSubmit={handleSubmit}>
-					<h2 className="fw-light mb-3">Sign in</h2>
-					<div className="mb-5">
-						<input value={email} onChange={(e) => setEmail(e.target.value)} type="email" className="form-control form-control-lg fw-light fs-6 input" style={{ backgroundColor: "#D3E7FF" }} id="email" placeholder="Enter email" />
-					</div>
-					<div className="mb-3">
-						<input value={password} onChange={(e) => setPassword(e.target.value)} type="password" className="form-control form-control-lg fw-light fs-6 input" style={{ backgroundColor: "#D3E7FF" }} id="password" placeholder="Enter password" />
-						<div id="forgotPassword" className="form-text text-end"><Link to="/forgot-password">Forgot your password?</Link></div>
-					</div>
-					<button type="submit" className="btn btn-primary btn-lg fw-light mt-3 btn-login" style={{ backgroundColor: "#4F9CF9", border: "none", width: "100%" }}>Login</button>
-				</form>
-			</div>	
-		</div>
+                {/* Imagen del yeti alineada a la derecha y más cerca */}
+                <div className="position-absolute yeti-img-container">
+                    <img src={yeti} className="img-fluid yeti-img" alt="Yeti" />
+                </div>
+            </div>
+
+		 {/* Sección derecha - Formulario */}
+		 <div className="col-12 col-md-4 d-flex justify-content-center align-items-center">
+			 <form onSubmit={handleSubmit} className="w-100 p-4 p-md-5">
+				 <h2 className="fw-light mb-4">Sign in</h2>
+				 <div className="form-group mb-4">
+					 <input
+						 value={email}
+						 onChange={(e) => setEmail(e.target.value)}
+						 type="email"
+						 className="form-control form-control-lg fw-light fs-6 input"
+						 id="email"
+						 placeholder="Enter email"
+						 required
+						 style={{ backgroundColor: "#D3E7FF" }}
+					 />
+				 </div>
+				 <div className="form-group mb-4">
+					 <input
+						 value={password}
+						 onChange={(e) => setPassword(e.target.value)}
+						 type="password"
+						 className="form-control form-control-lg fw-light fs-6 input"
+						 id="password"
+						 placeholder="Enter password"
+						 required
+						 style={{ backgroundColor: "#D3E7FF" }}
+					 />
+					 <div id="forgotPassword" className="form-text text-end">
+						 <Link to="/forgot-password">Forgot your password?</Link>
+					 </div>
+				 </div>
+				 <button type="submit" className="btn btn-primary btn-lg w-100 fw-light" style={{ backgroundColor: "#4F9CF9", border: "none" }}>
+					 Login
+				 </button>
+			 </form>
+		 </div>
+	 </div>
 	);
 };
-

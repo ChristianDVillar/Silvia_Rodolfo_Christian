@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import linea from "./../../img/linea.png";
 
 const ResetPassword = () => {
     const [newPassword, setNewPassword] = useState("");
@@ -46,26 +47,51 @@ const ResetPassword = () => {
     };
 
     return (
-        <div className="reset-password-container">
-            <h2>Reset Password</h2>
-            <form onSubmit={handlePasswordReset}>
+        <div className="container mt-auto p-3 d-flex flex-column min-vh-100">
+            <div className="row justify-content-start text-start mb-4 col-6">
+					<div className="col-12">
+						<h1 className="mb-n1 px-5" style={{ position: "relative", zIndex: 1, fontSize: "80px", fontWeight: "bold" }}>Reset Password</h1>
+						<img className="mt-2" src={linea} />
+					</div>
+				</div>
+        <div className="reset-password-container p-5 mt-5 rounded" style={{border: "solid 1px #043873", background: "#FFE492"}}>
+        <div className="row justify-content-center">
+        <div className="col-12 col-md-6">
+            <form onSubmit={handlePasswordReset} className="mb-3">
+
+                <div className="form-group mb-3">
                 <input
                     type="password"
+                    className="form-control w-100"
+                    style={{background: "#A7CEFC"}}
                     placeholder="Enter new password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     required
                 />
+                </div>
+                <div className="form-group mb-3">
                 <input
                     type="password"
+                    className="form-control w-100"
+                    style={{background: "#A7CEFC"}}
                     placeholder="Confirm new password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
                 />
-                <button type="submit">Reset Password</button>
+                </div>
+                
+                <div className="text-center mt-3">
+						<button type="submit" className="btn btn-primary fw-light align-text-center btn-block w-100" style={{ backgroundColor: "#4F9CF9", border: "none"}} >
+							<strong>Reset Password</strong>
+						</button>
+					</div>
             </form>
-            {message && <p>{message}</p>}
+            {message && <p className="alert alert-info text-center">{message}</p>}
+            </div>
+            </div>
+        </div>
         </div>
     );
 };

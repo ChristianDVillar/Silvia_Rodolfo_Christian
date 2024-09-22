@@ -29,10 +29,6 @@ const NewArticle = () => {
       });
 
       const file = await response.json();
-      //solicitud POST en la que enviamos la info a la ruta
-      //const response = await axios.post("https://api.cloudinary.com/v1_1/dohlrocq4/image/upload", formData);
-      //console.log("Imagen subida", response.data);
-
 
       //devuelve la URL segura de la imagen subida
       console.log(file);
@@ -43,7 +39,6 @@ const NewArticle = () => {
       throw error;
     }
   };
-
 
   const saveArticle = async () => {
     try {
@@ -80,13 +75,12 @@ const NewArticle = () => {
       console.error("Error en la solicitud:", error.message);
       console.error("Detalles del error:", error);
       alert("Hubo un problema. Inténtalo de nuevo."); // Si algo salió mal, muestra una alerta.
-
     }
   };
 
   return (
     <div className="container">
-      <div className="d-flex vh-100 mt-5 row">
+      <div className="d-flex flex-column align-items-start mt-5 row" style={{minHeight: "200px"}}>
         <div>
           <h1 className="mb-n1 px-5" style={{ position: "relative", zIndex: 1, fontWeight: "bold" }}>Stock</h1>
           <img src={linea} style={{ zIndex: 0 }} alt="Linea decorativa" />
@@ -99,7 +93,7 @@ const NewArticle = () => {
           </Link>
         </div>
 
-        <div className="card mb-5" style={{ width: "18rem", backgroundColor: "#FFE492" }}>
+        <div className="card mb-5 mt-5" style={{ width: "18rem", backgroundColor: "#FFE492" }}>
 
           <Image
             //'cloudName' es el nombre de la cuenta de cloudinary
