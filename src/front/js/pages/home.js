@@ -53,7 +53,7 @@ export const Home = () => {
 		<div className="d-flex flex-column flex-md-row vh-100 align-items-center justify-content-center">
 			{/* Sección izquierda */}
 			<div className="text-center text-md-start col-12 col-md-6 d-flex flex-column justify-content-center align-items-md-start position-relative">
-				<h1 className="mb-n1 px-md-5 display-4 font-weight-bold" style={{ fontSize: "80px", fontWeight: "bold" }}>Sign in</h1>
+				<h1 className="mb-n1 px-md-5 " style={{ fontSize: "80px", fontWeight: "bold" }}>Sign in</h1>
 				<img src={linea} className="mt-2mx-md-5 my-2 img-fluid" style={{ zIndex: 0, maxWidth: "100%", height: "auto" }} alt="Linea decorativa" />
 				<h3 className="px-md-5 fw-normal">Book your material</h3>
 				<h6 className="px-md-5 mt-5">If you do not yet have an account</h6>

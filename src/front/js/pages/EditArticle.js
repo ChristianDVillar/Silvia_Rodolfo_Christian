@@ -18,31 +18,31 @@ const EditArticle = () => {
     useEffect(() => {
         //Ejecuta loadArticle cuando id cambie (cuando se cargue el componente o cambie de artículo)
         if (id) {
-          loadArticle();
+            loadArticle();
         }
-      }, [id]);
+    }, [id]);
 
     const loadArticle = async () => {
         //petición GET al servidor para obtener los datos del artículo con el id
         try {
             const response = await fetch(`${store.apiUrl}/stock/${id}`);
             console.log(response);
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
             console.log(data);
-            
+
             setDescription(data.data.description);
             setStocktype(data.data.type);
-            setQuantity(data.data.quantity);        
+            setQuantity(data.data.quantity);
             setImageUrl(data.data.image);
         } catch (error) {
             console.error("Error cargando el artículo:", error);
         }
     };
-    
+
     const uploadImage = async () => {
         //añade la imagen seleccionada por el usuario (una nueva)
         const formData = new FormData();
@@ -87,7 +87,7 @@ const EditArticle = () => {
             console.log(data);
             actions.getStock();
             console.log(actions.getStock());
-            
+
             navigate('/stock');
         } catch (error) {
             console.error("Error actualizando el artículo:", error);
@@ -96,10 +96,10 @@ const EditArticle = () => {
 
     return (
         <div className="container">
-            <div className="d-flex flex-column align-items-start mt-5 row" style={{minHeight: "200px"}}>
-                <div>
+            <div className="d-flex flex-column align-items-start mt-5 row" style={{ minHeight: "200px" }}>
+                <div className="col-12 col-md-8">
                     <h1 className="mb-n1 px-5" style={{ position: "relative", zIndex: 1, fontWeight: "bold" }}>Stock</h1>
-                    <img src={linea} className="img-fluid" style={{ zIndex: 0, maxWidth: "100%", height: "auto" }} alt="Linea decorativa" />
+                    <img src={linea} className="mt-2mx-md-5 my-2 img-fluid" style={{ zIndex: 0, maxWidth: "100%", height: "auto" }} alt="Linea decorativa" />
                 </div>
                 <div className="mt-5">
                     <Link to="/stock">
@@ -109,54 +109,54 @@ const EditArticle = () => {
                     </Link>
                 </div>
 
-                <div className="card mb-5 mt-5" style={{ width: "18rem", backgroundColor: "#FFE492" }}>
+                <div className="col-12 col-md-6 mt-5">
+                    <div className="card mb-5 mt-5" style={{ width: "18rem", backgroundColor: "#FFE492" }}>
+                        <Image
+                            //'cloudName' es el nombre de la cuenta de cloudinary
+                            //'publicID' viene dado en la imagen que se sube
+                            className="mt-3" cloudName="dohlrocq4" publicId={imageUrl} />
 
-                    <Image
-                        //'cloudName' es el nombre de la cuenta de cloudinary
-                        //'publicID' viene dado en la imagen que se sube
-                        className="mt-3" cloudName="dohlrocq4" publicId={imageUrl} />
+                        <form onSubmit={(e) => { e.preventDefault(); editArticle(id); }}>
+                            <div className="card-body">
+                                <div className="mb-2">
+                                    <label htmlFor="formFileSm" className="form-label fw-light fs-6">Upload image</label>
+                                    <input className="form-control form-control-sm" id="formFileSm" type="file" style={{ backgroundColor: "#D3E7FF" }}
+                                        //maneja la selección y guardado del archivo de imagen del artículo
+                                        onChange={(event) => { setImageSelected(event.target.files[0]); }} />
+                                </div>
 
+                                <div className="mb-2">
+                                    <input type="text" className="form-control form-control-lg fw-light fs-6 input" style={{ backgroundColor: "#D3E7FF" }}
+                                        value={description} onChange={(e) => setDescription(e.target.value)} id="description" name="description" placeholder="Description" required />
+                                </div>
 
-                    <form onSubmit={(e) => { e.preventDefault(); editArticle(id); }}>
-                        <div className="card-body">
-                            <div className="mb-2">
-                                <label htmlFor="formFileSm" className="form-label fw-light fs-6">Upload image</label>
-                                <input className="form-control form-control-sm" id="formFileSm" type="file" style={{ backgroundColor: "#D3E7FF" }}
-                                    //maneja la selección y guardado del archivo de imagen del artículo
-                                    onChange={(event) => { setImageSelected(event.target.files[0]); }} />
+                                <div className="mb-2">
+                                    <select className="form-select fw-light fs-6" style={{ backgroundColor: "#D3E7FF", color: "#4F9CF9" }} value={stocktype} onChange={(e) => setStocktype(e.target.value)} required>
+                                        <option value="">Type</option>
+                                        <option value="monitor">Monitor</option>
+                                        <option value="teclado">Teclado</option>
+                                        <option value="cable">Cable</option>
+                                        <option value="mouse">Mouse</option>
+                                        <option value="camara">Cámara</option>
+                                    </select>
+                                </div>
+
+                                <div className="mb-2">
+                                    <input type="number" min="0" className="form-control form-control-lg fw-light fs-6 input" style={{ backgroundColor: "#D3E7FF" }}
+                                        value={quantity} onChange={(e) => setQuantity(e.target.value)} id="quantity" name="quantity" placeholder="Quantity" required />
+                                </div>
+
+                                <div className="text-center mb-2">
+                                    <button type="submit" className="btn btn-secondary m-2" style={{ backgroundColor: "#043873" }}>
+                                        <i className="fa-solid fa-check" />
+                                    </button>
+                                    <button type="button" className="btn btn-secondary m-2" style={{ backgroundColor: "#043873" }} onClick={() => navigate("/stock")}>
+                                        <i className="fa-solid fa-xmark" />
+                                    </button>
+                                </div>
                             </div>
-
-                            <div className="mb-2">
-                                <input type="text" className="form-control form-control-lg fw-light fs-6 input" style={{ backgroundColor: "#D3E7FF" }}
-                                    value={description} onChange={(e) => setDescription(e.target.value)} id="description" name="description" placeholder="Description" required />
-                            </div>
-
-                            <div className="mb-2">
-                                <select className="form-select fw-light fs-6" style={{ backgroundColor: "#D3E7FF", color: "#4F9CF9" }} value={stocktype} onChange={(e) => setStocktype(e.target.value)} required>
-                                    <option value="">Type</option>
-                                    <option value="monitor">Monitor</option>
-                                    <option value="teclado">Teclado</option>
-                                    <option value="cable">Cable</option>
-                                    <option value="mouse">Mouse</option>
-                                    <option value="camara">Cámara</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <input type="number" min="0" className="form-control form-control-lg fw-light fs-6 input" style={{ backgroundColor: "#D3E7FF" }}
-                                    value={quantity} onChange={(e) => setQuantity(e.target.value)} id="quantity" name="quantity" placeholder="Quantity" required />
-                            </div>
-
-                            <div className="text-center mb-2">
-                                <button type="submit" className="btn btn-secondary m-2" style={{ backgroundColor: "#043873" }}>
-                                    <i className="fa-solid fa-check" />
-                                </button>
-                                <button type="button" className="btn btn-secondary m-2" style={{ backgroundColor: "#043873" }} onClick={() => navigate("/stock")}>
-                                    <i className="fa-solid fa-xmark" />
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

@@ -32,7 +32,7 @@ export const Navbar = () => {
 				<Link to="/">
 					<img src={logoNavbar} style={{ width: "200px" }} alt="Logo" />
 				</Link>
-				<div className="d-flex align-items-center ms-auto gap-2">
+				<div className="d-flex align-items-center ms-auto gap-2 mt-3">
 					{/* Mostrar el dropdown de perfil con el nombre si está logueado */}
 					{token ? (
 						<div className="d-flex align-items-center">

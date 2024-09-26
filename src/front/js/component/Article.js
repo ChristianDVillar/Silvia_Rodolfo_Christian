@@ -11,7 +11,6 @@ const Article = ({ description, quantity, stocktype, image, id }) => {
     description: description,
     quantity: quantity,
     stocktype: stocktype,
-    image: image,
     id: id
   };
 
