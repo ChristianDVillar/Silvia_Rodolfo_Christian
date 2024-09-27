@@ -43,20 +43,22 @@ const ForgotPassword = () => {
     };
 
     return (
-        <div className="d-flex">
-            <div className="d-flex vh-100 justify-content-center align-items-center container row col-6" style={{ marginLeft: "100px" }}>
+        <div className="d-flex flex-column flex-md-row vh-100 align-items-center justify-content-center">
+            <div className="text-center text-md-start col-12 col-md-6 d-flex flex-column justify-content-center align-items-md-start position-relative">
                 <div>
-                    <h1 className="mb-n1 px-5" style={{ position: "relative", zIndex: 1, fontSize: "80px", fontWeight: "bold" }}>Forgot Password</h1>
-                    <img src={linea} style={{ zIndex: 0 }} />
+                    <h1 className="mb-n1 px-5" style={{ fontSize: "60px", fontWeight: "bold" }}>Forgot Password</h1>
+                    <img src={linea} className="mt-2mx-md-5 my-2 img-fluid" style={{ zIndex: -1, maxWidth: "100%", height: "auto" }} alt="Linea decorativa" />
                     <h3 className="px-5 fw-normal">Enter your email to reset your password</h3>
                 </div>
-                <img src={yeti} style={{ zIndex: 0, width: "300px", bottom: "200px", left: "550px" }} className="position-absolute" />
+                <div className="yeti-img-container">
+					<img src={yeti} style={{ zIndex: 0 }} className=" img-fluid yeti-img" alt="Yeti" />
+				</div>
             </div>
 
-            <div className="container col-3 row d-flex justify-content-center align-items-center" style={{ marginLeft: "80px" }}>
+            <div className="col-12 col-md-4 d-flex justify-content-center align-items-center">
                 <form onSubmit={handleForgotPassword}>
-                    <h2 className="fw-light mb-3">Reset Password</h2>
-                    <div className="mb-3">
+                    <h2 className="fw-light mb-4 mt-3">Reset Password</h2>
+                    <div className="form-group mb-4">
                         <input
                             type="email"
                             className="form-control form-control-lg fw-light fs-6 input"
@@ -69,8 +71,8 @@ const ForgotPassword = () => {
                         />
                     </div>
                     {message && <div className="mb-3 alert alert-info">{message}</div>}
-                    <button type="submit" className="btn btn-primary btn-lg fw-light mt-3 btn-login" style={{ backgroundColor: "#4F9CF9", border: "none", width: "100%" }}>
-                        Send Reset Link
+                    <button type="submit" className="btn btn-login btn-primary btn-lg w-100 fw-light" style={{ backgroundColor: "#4F9CF9", border: "none" }}>
+                        Send
                     </button>
                 </form>
             </div>

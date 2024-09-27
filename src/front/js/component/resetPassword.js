@@ -50,8 +50,8 @@ const ResetPassword = () => {
         <div className="container mt-auto p-3 d-flex flex-column min-vh-100">
             <div className="row justify-content-start text-start mb-4 col-6">
 					<div className="col-12">
-						<h1 className="mb-n1 px-5" style={{ position: "relative", zIndex: 1, fontSize: "80px", fontWeight: "bold" }}>Reset Password</h1>
-						<img className="mt-2" src={linea} />
+						<h1 className="mb-n1 px-5" style={{ fontSize: "80px", fontWeight: "bold" }}>Reset Password</h1>
+						<img src={linea} className="mt-2mx-md-5 my-2 img-fluid" style={{ zIndex: -1, maxWidth: "100%", height: "auto" }} alt="Linea decorativa" />
 					</div>
 				</div>
         <div className="reset-password-container p-5 mt-5 rounded" style={{border: "solid 1px #043873", background: "#FFE492"}}>

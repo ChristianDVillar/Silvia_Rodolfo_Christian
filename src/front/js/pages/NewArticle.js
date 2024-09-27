@@ -117,11 +117,11 @@ const NewArticle = () => {
                 <div className="mb-2">
                   <select className="form-select fw-light fs-6" style={{ backgroundColor: "#D3E7FF", color: "#4F9CF9" }} value={stocktype} onChange={(e) => setStocktype(e.target.value)} required>
                     <option value="">Type</option>
-                    <option value="monitor">Monitor</option>
-                    <option value="teclado">Teclado</option>
+                    <option value="monitor">Screen</option>
+                    <option value="teclado">Keyboard</option>
                     <option value="cable">Cable</option>
                     <option value="mouse">Mouse</option>
-                    <option value="camara">Cámara</option>
+                    <option value="camara">Webcam</option>
                   </select>
                 </div>
 

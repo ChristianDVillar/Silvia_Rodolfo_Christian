@@ -112,7 +112,7 @@ export const FormPedido = () => {
         }
     
         try {
-            const response = await fetch(`${apiUrl}form`, {
+            const response = await fetch(`${apiUrl}/form`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -122,6 +122,7 @@ export const FormPedido = () => {
                     
                     currentDate,
                     details: selected.map(item => ({
+                        formId: orderRandomNumber,
                         stockId: item.id,  // Id del producto
                         description: item.description,
                         quantity: item.cantidad,  // La cantidad actualizada
@@ -218,6 +219,8 @@ export const FormPedido = () => {
         return <span>Quedan {quedanTantosPedidos} productos.</span>;
     };
 
+    const orderRandomNumber = Math.floor(1000 + Math.random() * 9000);
+
     // Función para obtener la fecha actual y formatearla a dd.mm.yyyy
     useEffect(() => {
         const today = new Date();
@@ -241,7 +244,7 @@ export const FormPedido = () => {
                     {/* Información de la orden */}
                     <div className="row justify-content-center mb-4">
                         <div className="col-md-3 text-center">
-                            <h6 style={{ color: "#043873" }}><strong>Order #XXXXXX</strong></h6> {/* -------------------- Conectar el número de Order con la BBDD*/}
+                            <h6 style={{ color: "#043873" }}><strong>Order #{orderRandomNumber}</strong></h6>
                         </div>
                         <div className="col-md-3 text-center">
                             <h6 style={{ color: "#043873" }}><strong>{currentDate}</strong></h6>
@@ -254,7 +257,7 @@ export const FormPedido = () => {
                             </strong></h6>
                         </div>
                     </div>
-                    <p style={{ color: "lightgray" }}>Recuerda que tienes un máximo de 5 productos. {countPedidos} </p>
+                    <p style={{ color: "lightgray" }}>Remember that you have a max of 5 products.</p>
                     {/* Barra de búsqueda */}
                     <div className="row mb-4">
                         <div className="col-12 col-md-9">
@@ -266,12 +269,12 @@ export const FormPedido = () => {
                                     onChange={handleSelectType}
                                     required
                                 >
-                                    <option value="">Selecciona un tipo de producto</option> {/* Opción por defecto */}
-                                    <option value="monitor">Monitor</option>
-                                    <option value="teclado">Teclado</option>
+                                    <option value="">Select a product type</option> {/* Opción por defecto */}
+                                    <option value="monitor">Screen</option>
+                                    <option value="teclado">Keyboard</option>
                                     <option value="cable">Cable</option>
                                     <option value="mouse">Mouse</option>
-                                    <option value="camara">Cámara</option>
+                                    <option value="camara">Webcam</option>
                                 </select>
                                 {/* Icono de búsqueda */}
                                 <button
@@ -288,14 +291,14 @@ export const FormPedido = () => {
                                     <div className="modal-dialog">
                                         <div className="modal-content">
                                             <div className="modal-header">
-                                                <h5 className="modal-title">Productos del tipo {selectedType}</h5>
+                                                <h5 className="modal-title">Product type: {selectedType}</h5>
                                                 <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
                                             </div>
                                             <div className="modal-body">
                                                 <ul>
                                                     {products.map((product, index) => (
                                                         <li key={index}>
-                                                            <button onClick={() => handleSelectedClick(product)}>{product.description}</button>
+                                                            <button className="btn btn-link" onClick={() => handleSelectedClick(product)}>{product.description}</button>
                                                         </li>
                                                     ))}
                                                 </ul>

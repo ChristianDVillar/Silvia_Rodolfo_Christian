@@ -57,7 +57,7 @@ export const CardPedido = ({ index, article, onCantidadChange, onDatesChange }) 
                 {/* Controles y stock (en resoluciones grandes se alinea a la derecha, en pequeñas se reordena) */}
                 <div className="d-flex flex-wrap align-items-center justify-content-between col-12 col-md-6">
                     {/* Stock disponible */}
-                    <span className="me-4" style={{ fontWeight: "bold" }}>STOCK DISPONIBLE: {article.quantity}</span>
+                    <span className="me-4" style={{ fontWeight: "bold" }}>STOCK: {article.quantity}</span>
 
                     {/* Botón de calendario */}
                     <button className="btn me-4 p-0" style={{ fontSize: "24px" }} onClick={toggleCalendar}>

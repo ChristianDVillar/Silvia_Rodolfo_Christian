@@ -52,18 +52,16 @@ const getState = ({ getStore, getActions, setStore }) => {
             },
 			handleSelected: (article) => {
 				const store = getStore();
-				if(store.selected.length == 5) {
-					alert("Recuerda que tienes un máximo de 5 productos");
+				if(store.selected.some(p => p.description === article.description)) {
+					const newArray = store.selected.filter((item)=>{
+						return item.description != article.description;
+					})
+					setStore({selected: newArray})
+				} else if (store.selected.length < 5) {
+					setStore({ selected: [...store.selected, article] });
 				} else {
-					if(store.selected.some(p => p.description === article.description)) {
-						const newArray = store.selected.filter((item)=>{
-							return item.description != article.description;
-						})
-						setStore({selected: newArray})
-					} else {
-						setStore({ selected: [...store.selected, article] });
-					}
-				}	
+					alert("Recuerda que tienes un máximo de 5 productos");
+				}
 			},
 			getStock: () => {
 				const store = getStore();

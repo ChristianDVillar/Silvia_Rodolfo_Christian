@@ -57,8 +57,8 @@ const ChangePasswordLogged = () => {
     return (
         <div className="d-flex flex-column flex-md-row vh-100 align-items-center justify-content-center">
             <div className="text-center text-md-start col-12 col-md-6 d-flex flex-column justify-content-center align-items-md-start position-relative">
-                <h1 className="mb-n1 px-md-5 display-4" style={{ fontSize: "60px", fontWeight: "bold" }}>Change Password</h1>
-                <img src={linea} className="mt-2mx-md-5 my-2 img-fluid" style={{ zIndex: 0, maxWidth: "100%", height: "auto" }} alt="Linea decorativa" />
+                <h1 className="mb-n1 px-md-5" style={{ fontSize: "60px", fontWeight: "bold" }}>Change Password</h1>
+                <img src={linea} className="mt-2mx-md-5 my-2 img-fluid" style={{ zIndex: -1, maxWidth: "100%", height: "auto" }} alt="Linea decorativa" />
                 <h3 className="px-md-5 fw-normal">Secure your account</h3>
                 <h6 className="px-md-5 fw-light mt-4">Ensure your account is safe with a new password</h6>
 
@@ -72,7 +72,7 @@ const ChangePasswordLogged = () => {
                     <h2 className="fw-light mb-3">Change Password</h2>
 
                     {/* Current Password Input */}
-                    <div className="mb-3">
+                    <div className="form-group mb-4">
                         <input
                             value={currentPassword}
                             onChange={(e) => setCurrentPassword(e.target.value)}
@@ -111,7 +111,7 @@ const ChangePasswordLogged = () => {
                     </div>
 
                     {/* Submit Button */}
-                    <button type="submit" className="btn btn-primary btn-lg fw-light mt-3 btn-login" style={{ backgroundColor: "#4F9CF9", border: "none", width: "100%" }}>
+                    <button type="submit" className="btn btn-login btn-primary btn-lg w-100 fw-light" style={{ backgroundColor: "#4F9CF9", border: "none" }}>
                         Change Password
                     </button>
 
